@@ -72,6 +72,7 @@
 .s-snippet-wrap {
     display: inline-block;
     margin: 5px 2px;
+    vertical-align: top;
 }
 
 .s-snippet-overlay {
