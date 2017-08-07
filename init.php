@@ -44,3 +44,4 @@ SNIPPETS_CLASS_FriendsBridge::getInstance()->init();
 SNIPPETS_CLASS_GroupsBridge::getInstance()->init();
 SNIPPETS_CLASS_EventsBridge::getInstance()->init();
 SNIPPETS_CLASS_VirtualGiftsBridge::getInstance()->init();
+SNIPPETS_CLASS_ProtectedPhotoBridge::getInstance()->init();

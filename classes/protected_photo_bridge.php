@@ -33,24 +33,20 @@
  * @author Sergey Kambalin <greyexpert@gmail.com>
  * @package snippets.classes
  */
-class SNIPPETS_CLASS_EventHandler
+class SNIPPETS_CLASS_ProtectedPhotoBridge
 {
-    const ENTITY_TYPE_USER = "user";
-    
-    const EVENT_COLLECT_SNIPPETS = "snippets.collect_snippets";
-    const EVENT_BEFORE_SNIPPET_RENDER = "snippets.before_snippet_render";
-    
+
     /**
      * Class instance
      *
-     * @var SNIPPETS_CLASS_EventHandler
+     * @var SNIPPETS_CLASS_FriendsBridge
      */
     protected static $classInstance;
 
     /**
      * Returns class instance
      *
-     * @return SNIPPETS_CLASS_EventHandler
+     * @return SNIPPETS_CLASS_ProtectedPhotoBridge
      */
     public static function getInstance()
     {
@@ -64,11 +60,65 @@ class SNIPPETS_CLASS_EventHandler
 
     protected function __construct()
     {
-        
+
     }
-    
+
+    public function isActive()
+    {
+        return OW::getPluginManager()->isPluginActive("protectedphotos");
+    }
+
+    protected function getLockImageUrl()
+    {
+        $plugin = OW::getPluginManager()->getPlugin('protectedphotos');
+
+        return $plugin->getStaticUrl() . 'images/ic_pass_protected.svg';
+    }
+
+    public function beforeSnippetRender(OW_Event $event)
+    {
+        $params = $event->getParams();
+
+        /**
+         * @var $snippet SNIPPETS_CMP_Snippet
+         */
+        $snippet = $event->getData();
+
+        if ($params["name"] !== SNIPPETS_CLASS_PhotoBridge::WIDGET_NAME)
+        {
+            return;
+        }
+
+        $isAdmin = OW::getUser()->isAuthorized('photo');
+
+        if ($isAdmin)
+        {
+            return;
+        }
+
+        $albumCovers = $snippet->getData();
+        $albumIds = array_keys($albumCovers);
+        $access = PROTECTEDPHOTOS_BOL_Service::getInstance()->getAccessForUser(OW::getUser()->getId(), $albumIds);
+
+        $images = array();
+        foreach ($albumCovers as $albumId => $imageUrl)
+        {
+            $images[] = in_array($albumId, $access) ? $imageUrl : array(
+                $this->getLockImageUrl(),
+                "s-protected-photo"
+            );
+        }
+
+        $snippet->setImages($images);
+    }
+
     public function init()
     {
-        
+        if ( !$this->isActive() )
+        {
+            return;
+        }
+
+        OW::getEventManager()->bind(SNIPPETS_CLASS_EventHandler::EVENT_BEFORE_SNIPPET_RENDER, array($this, "beforeSnippetRender"));
     }
 }

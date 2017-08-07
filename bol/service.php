@@ -80,7 +80,16 @@ class SNIPPETS_BOL_Service
             /* @var $snippet SNIPPETS_CMP_Snippet */
             
             $snippet->setIsPreview($preview);
-            
+
+            $renderEvent = new OW_Event(SNIPPETS_CLASS_EventHandler::EVENT_BEFORE_SNIPPET_RENDER, array(
+                "name" => $snippet->getName(),
+                "snippet" => $snippet
+            ), $snippet);
+
+            OW::getEventManager()->trigger($renderEvent);
+
+            $snippet = $renderEvent->getData();
+
             $snippets[$snippet->getName()] = array(
                 "html" => $snippet->render(),
                 "name" => $snippet->getName()

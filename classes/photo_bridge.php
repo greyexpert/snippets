@@ -130,21 +130,24 @@ class SNIPPETS_CLASS_PhotoBridge
         }
         
         $images = array();
+        $snippetData = array();
         foreach ( $data["albums"] as $album )
         {
             $images[] = $album["coverImage"];
+            $snippetData[$album["id"]] = $album["coverImage"];
         }
         
         $url = OW::getRouter()->urlForRoute("photo_user_albums", array(
             "user" => BOL_UserService::getInstance()->getUserName($userId)
         ));
-        
+
+        $snippet->setData($snippetData);
         $snippet->setImages($images);
         $snippet->setLabel($language->text("snippets", "snippet_photos", array(
             "count" => '<span class="ow_txt_value">' . $total . '</span>'
         )));
         $snippet->setUrl($url);
-        
+
         $event->add($snippet);
     }
     
