@@ -79,7 +79,8 @@ class SNIPPETS_CLASS_FriendsBridge
         {
             return;
         }
-        
+
+        $showEmpty = true;
         $userId = $params["entityId"];
         $preview = $params["preview"];
         
@@ -118,34 +119,34 @@ class SNIPPETS_CLASS_FriendsBridge
         $total = OW::getEventManager()->call("plugin.friends.count_friends", array(
             "userId" => $userId
         ));
-        
-        if ( empty($data) )
-        {
-            return;
-        }
-        
-        $users = BOL_AvatarService::getInstance()->getDataForUserAvatars($data, true, false, false, false);
-        
-        $images = array();
-        foreach ( $users as $user )
-        {
-            $images[] = $user["src"];
-        }
-        
-        $dispslayType = count($images) > 1 ? SNIPPETS_CMP_Snippet::DISPLAY_TYPE_4 : SNIPPETS_CMP_Snippet::DISPLAY_TYPE_1;
-        
+
         $userName = BOL_UserService::getInstance()->getUserName($userId);
         $url = OW::getRouter()->urlForRoute('friends_user_friends', array('user'=>$userName));
-        
-        $snippet->setImages($images);
         $snippet->setLabel($language->text("snippets", "snippet_friends", array(
             "count" => '<span class="ow_txt_value">' . $total . '</span>'
         )));
-        
+
         $snippet->setUrl($url);
-        $snippet->setDisplayType($dispslayType);
         
-        $event->add($snippet);
+        if ( !empty($data) )
+        {
+            $users = BOL_AvatarService::getInstance()->getDataForUserAvatars($data, true, false, false, false);
+
+            $images = array();
+            foreach ( $users as $user )
+            {
+                $images[] = $user["src"];
+            }
+
+            $displayType = count($images) > 1 ? SNIPPETS_CMP_Snippet::DISPLAY_TYPE_4 : SNIPPETS_CMP_Snippet::DISPLAY_TYPE_1;
+            $snippet->setDisplayType($displayType);
+
+            $snippet->setImages($images);
+        }
+
+        if (!empty($data) || $showEmpty) {
+            $event->add($snippet);
+        }
     }
     
     public function init()

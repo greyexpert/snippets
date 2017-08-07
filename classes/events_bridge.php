@@ -79,7 +79,8 @@ class SNIPPETS_CLASS_EventsBridge
         {
             return;
         }
-        
+
+        $showEmpty = true;
         $userId = $params["entityId"];
         $preview = $params["preview"];
         
@@ -115,33 +116,34 @@ class SNIPPETS_CLASS_EventsBridge
         $list = $service->findUserParticipatedPublicEvents($userId, 1, 3);
         $total = $service->findUserParticipatedPublicEventsCount($userId);
 
-        if ( empty($list) )
-        {
-            return;
-        }
-        
-        $images = array();
-        foreach ( $list as $eventItem )
-        {
-            $images[] = $eventItem->getImage() ? $service->generateImageUrl($eventItem->getImage(), true) : $service->generateDefaultImageUrl();
-        }
-        
         $url = OW::getRouter()->urlForRoute("event.view_event_list", array(
             "list" => "user-participated-events"
         ));
-        
+
         $url = OW::getRequest()->buildUrlQueryString($url, array(
             "userId" => $userId
         ));
-        
-        $snippet->setImages($images);
+
         $snippet->setLabel($language->text("snippets", "snippet_events", array(
             "count" => '<span class="ow_txt_value">' . $total . '</span>'
         )));
-        
+
         $snippet->setUrl($url);
-        
-        $event->add($snippet);
+
+        if ( !empty($list) )
+        {
+            $images = array();
+            foreach ( $list as $eventItem )
+            {
+                $images[] = $eventItem->getImage() ? $service->generateImageUrl($eventItem->getImage(), true) : $service->generateDefaultImageUrl();
+            }
+
+            $snippet->setImages($images);
+        }
+
+        if (!empty($list) || $showEmpty) {
+            $event->add($snippet);
+        }
     }
     
     public function init()
