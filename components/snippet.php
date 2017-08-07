@@ -49,6 +49,8 @@ class SNIPPETS_CMP_Snippet extends OW_Component
     protected $name;
     protected $displayType = null;
     protected $iconClass;
+    protected $wrapperClass = "";
+    protected $data = null;
 
     public function __construct( $snippetName, $entityId = null )
     {
@@ -73,9 +75,35 @@ class SNIPPETS_CMP_Snippet extends OW_Component
         $this->iconClass = $iconClass;
     }
 
+    public function setWrapperClass( $wrapperClass )
+    {
+        $this->wrapperClass = $wrapperClass;
+    }
+
     public function setImages( $images )
     {
-        $this->images = $images;
+        $this->images = array();
+
+        foreach ($images as $image)
+        {
+            $src = null;
+            $class = "";
+
+            if (is_array($image))
+            {
+                $src = $image[0];
+                $class = isset($image[1]) ? $image[1] : "";
+            }
+            else
+            {
+                $src = $image;
+            }
+
+            $this->images[] = array(
+                "src" => $src,
+                "class" => $class
+            );
+        }
     }
     
     public function setDisplayType( $displayType )
@@ -91,6 +119,16 @@ class SNIPPETS_CMP_Snippet extends OW_Component
     public function setUrl( $url )
     {
         $this->url = $url;
+    }
+
+    public function setData($data)
+    {
+        $this->data = $data;
+    }
+
+    public function getData()
+    {
+        return $this->data;
     }
     
     public function beforePreviewRender()
@@ -126,6 +164,7 @@ class SNIPPETS_CMP_Snippet extends OW_Component
     public function render()
     {
         $this->assign("images", $this->images);
+        $this->assign("wrapperClass", $this->wrapperClass);
         $this->assign("url", $this->url);
         $this->assign("label", $this->label);
         $this->assign("iconClass", $this->iconClass);

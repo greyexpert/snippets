@@ -326,3 +326,7 @@ a.s-snippet-overlay .s-snippet-label {
     text-align: center;
     line-height: 50px;
 }
+
+.s-protected-photo {
+    background-color: rgba(38,38,45,0.5);
+}
