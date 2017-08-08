@@ -16,14 +16,6 @@
  }
 
  {/style}
- 
- {script}
- var shown = false;
- $("#snippets-show-manual").click(function() {
-    $("#snippets-manual")[shown ? "hide" : "show"]();
-    shown = !shown;
- });
- {/script}
 
 <div class="ow_smallmargin">
     {text key="snippets+admin_help_brief" userSettings=$userSettings}
@@ -32,7 +24,7 @@
 {text key="snippets+config_steps_label"}
 
 <div style="min-height: 143px;">
-<div id="snippets-manual" style="display: none">
+<div id="snippets-manual">
 <ul class="ow_regular ow_stdmargin">
 <li>
     {text key="snippets+config_step1" userSettings=$userSettings}

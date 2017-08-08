@@ -58,12 +58,13 @@ class SNIPPETS_BOL_Service
     
     }
 
-    public function getSnippets( $entityType, $entityId, $order, $preview = false )
+    public function getSnippets( $entityType, $entityId, $order, $preview = false, $hideEmpty = true )
     {
         $event = new BASE_CLASS_EventCollector(SNIPPETS_CLASS_EventHandler::EVENT_COLLECT_SNIPPETS, array(
             "entityType" => $entityType,
             "entityId" => $entityId,
-            "preview" => $preview
+            "preview" => $preview,
+            "hideEmpty" => $hideEmpty
         ));
         
         OW::getEventManager()->trigger($event);

@@ -79,7 +79,8 @@ class SNIPPETS_CLASS_GroupsBridge
         {
             return;
         }
-        
+
+        $showEmpty = !$params["hideEmpty"];
         $userId = $params["entityId"];
         $preview = $params["preview"];
         
@@ -114,28 +115,30 @@ class SNIPPETS_CLASS_GroupsBridge
         $total = $service->findUserGroupListCount($userId);
         $list = $service->findUserGroupList($userId, 0, 3);
 
-        if ( empty($list) )
-        {
-            return;
-        }
-        
-        $images = array();
-        foreach ( $list as $group )
-        {
-            $images[] = $service->getGroupImageUrl($group);
-        }
-        
-        $url = OW::getRouter()->urlForRoute("groups-user-groups", array(
-            "user" => BOL_UserService::getInstance()->getUserName($userId)
-        ));
-        
-        $snippet->setImages($images);
         $snippet->setLabel($language->text("snippets", "snippet_groups", array(
             "count" => '<span class="ow_txt_value">' . $total . '</span>'
         )));
+
+        $url = OW::getRouter()->urlForRoute("groups-user-groups", array(
+            "user" => BOL_UserService::getInstance()->getUserName($userId)
+        ));
+
         $snippet->setUrl($url);
-        
-        $event->add($snippet);
+
+        if ( !empty($list) )
+        {
+            $images = array();
+            foreach ( $list as $group )
+            {
+                $images[] = $service->getGroupImageUrl($group);
+            }
+
+            $snippet->setImages($images);
+        }
+
+        if (!empty($list) || $showEmpty) {
+            $event->add($snippet);
+        }
     }
     
     public function init()

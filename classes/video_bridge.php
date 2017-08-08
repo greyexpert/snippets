@@ -79,7 +79,8 @@ class SNIPPETS_CLASS_VideoBridge
         {
             return;
         }
-        
+
+        $showEmpty = !$params["hideEmpty"];
         $userId = $params["entityId"];
         $preview = $params["preview"];
         
@@ -114,28 +115,30 @@ class SNIPPETS_CLASS_VideoBridge
         $total = $service->findUserClipsCount($userId);
         $list = $service->findUserClipsList($userId, 1, 3);
 
-        if ( empty($list) )
-        {
-            return;
-        }
-        
-        $images = array();
-        foreach ( $list as $clip )
-        {
-            $images[] = $clip["thumb"];
-        }
-        
         $url = OW::getRouter()->urlForRoute("video_user_video_list", array(
             "user" => BOL_UserService::getInstance()->getUserName($userId)
         ));
-        
-        $snippet->setImages($images);
+
         $snippet->setLabel($language->text("snippets", "snippet_video", array(
             "count" => '<span class="ow_txt_value">' . $total . '</span>'
         )));
+
         $snippet->setUrl($url);
-        
-        $event->add($snippet);
+
+        if ( !empty($list) )
+        {
+            $images = array();
+            foreach ( $list as $clip )
+            {
+                $images[] = $clip["thumb"];
+            }
+
+            $snippet->setImages($images);
+        }
+
+        if (!empty($list) || $showEmpty) {
+            $event->add($snippet);
+        }
     }
     
     public function init()

@@ -79,7 +79,8 @@ class SNIPPETS_CLASS_VirtualGiftsBridge
         {
             return;
         }
-        
+
+        $showEmpty = !$params["hideEmpty"];
         $userId = $params["entityId"];
         $preview = $params["preview"];
         
@@ -99,31 +100,32 @@ class SNIPPETS_CLASS_VirtualGiftsBridge
         $total = $service->countUserReceivedGifts($userId);
         $list = $service->findUserReceivedGifts($userId, 1, 4);
 
-        if ( empty($list) )
-        {
-            return;
-        }
-        
-        $images = array();
-        foreach ( $list as $gift )
-        {
-            $images[] = $gift["imageUrl"];
-        }
-        
-        $dispslayType = count($images) > 1 ? SNIPPETS_CMP_Snippet::DISPLAY_TYPE_4 : SNIPPETS_CMP_Snippet::DISPLAY_TYPE_1;
-        
         $url = OW::getRouter()->urlForRoute('virtual_gifts_user_list', array(
             "userName" => BOL_UserService::getInstance()->getUserName($userId)
         ));
-        
-        $snippet->setImages($images);
+
         $snippet->setLabel($language->text("snippets", "snippet_virtual_gifts", array(
             "count" => '<span class="ow_txt_value">' . $total . '</span>'
         )));
+
         $snippet->setUrl($url);
-        $snippet->setDisplayType($dispslayType);
-        
-        $event->add($snippet);
+
+        if ( !empty($list) )
+        {
+            $images = array();
+            foreach ( $list as $gift )
+            {
+                $images[] = $gift["imageUrl"];
+            }
+
+            $snippet->setImages($images);
+            $displayType = count($images) > 1 ? SNIPPETS_CMP_Snippet::DISPLAY_TYPE_4 : SNIPPETS_CMP_Snippet::DISPLAY_TYPE_1;
+            $snippet->setDisplayType($displayType);
+        }
+
+        if (!empty($list) || $showEmpty) {
+            $event->add($snippet);
+        }
     }
     
     public function init()

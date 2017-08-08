@@ -97,6 +97,11 @@ class SNIPPETS_CLASS_ProtectedPhotoBridge
         }
 
         $albumCovers = $snippet->getData();
+
+        if (empty($albumCovers)) {
+            return;
+        }
+
         $albumIds = array_keys($albumCovers);
         $access = PROTECTEDPHOTOS_BOL_Service::getInstance()->getAccessForUser(OW::getUser()->getId(), $albumIds);
 
