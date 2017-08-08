@@ -105,7 +105,7 @@ a.s-snippet-overlay .s-snippet-label {
     border-radius: 5px;
 }
 
-.s-snippet-label {
+.s-snippet-preview .s-snippet-label {
     width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
