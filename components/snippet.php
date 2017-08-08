@@ -51,6 +51,7 @@ class SNIPPETS_CMP_Snippet extends OW_Component
     protected $iconClass;
     protected $wrapperClass = "";
     protected $data = null;
+    protected $isEmpty = null;
 
     public function __construct( $snippetName, $entityId = null )
     {
@@ -73,6 +74,16 @@ class SNIPPETS_CMP_Snippet extends OW_Component
     public function setIconClass( $iconClass )
     {
         $this->iconClass = $iconClass;
+    }
+
+    public function setIsEmpty($empty = true)
+    {
+        $this->isEmpty = $empty;
+    }
+
+    public function isEmpty()
+    {
+        return $this->isEmpty === null ? empty($this->images) : $this->isEmpty;
     }
 
     public function setWrapperClass( $wrapperClass )
@@ -168,6 +179,7 @@ class SNIPPETS_CMP_Snippet extends OW_Component
         $this->assign("url", $this->url);
         $this->assign("label", $this->label);
         $this->assign("iconClass", $this->iconClass);
+        $this->assign("isEmpty", $this->isEmpty());
         
         $autoDisplayType = count($this->images);
         $autoDisplayType = $autoDisplayType > 4 ? 4 : $autoDisplayType;

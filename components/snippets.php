@@ -52,12 +52,12 @@ class SNIPPETS_CMP_Snippets extends OW_Component
         $this->entityType = $entityType;
         $this->entityId = $entityId;
         
-        $this->settings = empty($settings) ? array(
+        $this->settings = empty($settings["snippets"]) ? array(
             "hidden" => array(),
             "active" => array()
-        ) : json_decode($settings, true);
+        ) : json_decode($settings["snippets"], true);
         
-        $this->snippets = $this->getSnippets();
+        $this->snippets = $this->getSnippets($settings["hideEmpty"]);
         $this->hasSnippets = !empty($this->snippets);
     }
     
@@ -77,9 +77,9 @@ class SNIPPETS_CMP_Snippets extends OW_Component
         OW::getDocument()->addOnloadScript($js);
     }
     
-    public function getSnippets()
+    public function getSnippets($hideEmpty = true)
     {
-        $snippets = SNIPPETS_BOL_Service::getInstance()->getSnippets($this->entityType, $this->entityId, $this->settings, false);
+        $snippets = SNIPPETS_BOL_Service::getInstance()->getSnippets($this->entityType, $this->entityId, $this->settings, false, $hideEmpty);
         
         return empty($snippets["active"]) ? array() : $snippets["active"];
     }

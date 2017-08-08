@@ -46,7 +46,7 @@ class SNIPPETS_CMP_UserSnippetsWidget extends BASE_CLASS_Widget
 
         $userId = (int) $params->additionalParamList['entityId'];
         
-        $snippets = new SNIPPETS_CMP_Snippets(SNIPPETS_CLASS_EventHandler::ENTITY_TYPE_USER, $userId, $params->customParamList["snippets"]);
+        $snippets = new SNIPPETS_CMP_Snippets(SNIPPETS_CLASS_EventHandler::ENTITY_TYPE_USER, $userId, $params->customParamList);
         
         if ( !$snippets->hasSnippets && !$params->customizeMode )
         {
@@ -87,6 +87,12 @@ class SNIPPETS_CMP_UserSnippetsWidget extends BASE_CLASS_Widget
             "display" => "custom",
             "name" => "snippets",
             "render" => array("SNIPPETS_CMP_UserSnippetsWidget", "renderSettings")
+        );
+
+        $settings["hideEmpty"] = array(
+            "presentation" => self::PRESENTATION_CHECKBOX,
+            "label" => OW::getLanguage()->text("snippets", "hide_empty_snippets_label"),
+            "value" => true
         );
         
         return $settings;

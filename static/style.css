@@ -90,6 +90,10 @@ a.s-snippet-overlay {
     text-decoration: none;
 }
 
+.s-snippet.s-snippet-empty {
+    background-color: rgba(220, 220, 220, 0.2);
+}
+
 a.s-snippet-overlay .s-snippet-label {
     margin-top: 64px;
     color: #ffffff;
@@ -102,7 +106,9 @@ a.s-snippet-overlay .s-snippet-label {
 }
 
 .s-snippet-label {
-    
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .s-snippet-image {
@@ -262,7 +268,7 @@ a.s-snippet-overlay .s-snippet-label {
 /* Preview */
 
 .s-snippet-preview {
-    width: 50px;
+    width:58px;
     border-width: 1px;
     border-radius: 4px;
     
@@ -294,7 +300,7 @@ a.s-snippet-overlay .s-snippet-label {
     margin-top: 2px;
     border-top-width: 1px;
     border-style: dashed;
-    height: 50px;
+    height: 52px;
 }
 
 .s-ss-title {
@@ -324,7 +330,7 @@ a.s-snippet-overlay .s-snippet-label {
 .s-ss-section-empty-msg {
     display: none;
     text-align: center;
-    line-height: 50px;
+    line-height: 52px;
 }
 
 .s-protected-photo {

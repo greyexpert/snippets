@@ -80,7 +80,7 @@ class SNIPPETS_CLASS_VirtualGiftsBridge
             return;
         }
 
-        $showEmpty = true;
+        $showEmpty = !$params["hideEmpty"];
         $userId = $params["entityId"];
         $preview = $params["preview"];
         
